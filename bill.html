@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MNJ Tech Billing</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Favicon -->
+    <link href="vm.png" rel="icon">
+
+    <style>
+        /* Define Google-like color palette */
+        :root {
+            --google-blue: #4285F4;
+            --google-blue-dark: #0055ff;
+            --google-gray-light: #f8f9fa;
+            --google-gray-medium: #e0e0e0;
+            --google-gray-dark: #5f6368;
+            --google-text-dark: #202124;
+            --google-text-light: #e8eaed;
+            --google-surface-light: #ffffff;
+            --google-surface-dark: #202124;
+            --google-background-light: #f0f2f5;
+            --google-background-dark: #2c2c2c;
+            --google-shadow-color: rgba(0, 0, 0, 0.1);
+            --google-shadow-color-dark: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Base styles for light mode (Google-like) */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--google-background-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            color: var(--google-text-dark);
+        }
+        .container {
+            background-color: var(--google-surface-light);
+            border-radius: 8px; /* Slightly less rounded for a crisper look */
+            box-shadow: 0 4px 8px var(--google-shadow-color); /* More pronounced shadow */
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 900px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"] {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--google-gray-medium);
+            border-radius: 4px; /* Slightly less rounded */
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease-in-out, background-color 0.3s ease, color 0.3s ease;
+            background-color: var(--google-surface-light);
+            color: var(--google-text-dark);
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--google-blue);
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.25); /* Google blue with opacity */
+        }
+        button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px; /* Consistent rounded corners */
+            font-weight: 500; /* Slightly lighter font weight */
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, color 0.3s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle button shadow */
+        }
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        .btn-primary {
+            background-color: var(--google-blue);
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: var(--google-blue-dark);
+        }
+        .btn-secondary {
+            background-color: var(--google-gray-medium);
+            color: var(--google-text-dark);
+        }
+        .btn-secondary:hover {
+            background-color: #c0c0c0;
+        }
+        .btn-danger {
+            background-color: #ea4335; /* Google Red */
+            color: #ffffff;
+        }
+        .btn-danger:hover {
+            background-color: #d93025;
+        }
+        .btn-success {
+            background-color: #34a853; /* Google Green */
+            color: #ffffff;
+        }
+        .btn-success:hover {
+            background-color: #2e8f4c;
+        }
+        .message-box {
+            background-color: #fff3e0; /* Light orange for info */
+            color: #e65100; /* Dark orange for info */
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            text-align: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .error-message {
+            background-color: #fce8e6; /* Light red */
+            color: #c5221f; /* Dark red */
+        }
+        .success-message {
+            background-color: #e6f4ea; /* Light green */
+            color: #1e8e3e; /* Dark green */
+        }
+        .hidden {
+            display: none;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--google-gray-medium);
+            transition: border-color 0.3s ease;
+        }
+        .header .logo {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: var(--google-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+        .header .menu-options button {
+            margin-left: 1rem;
+            background-color: transparent;
+            color: var(--google-gray-dark);
+            box-shadow: none;
+            transition: color 0.3s ease;
+        }
+        .header .menu-options button:hover {
+            color: var(--google-blue);
+            transform: none;
+        }
+        .excel-container {
+            border: 1px solid var(--google-gray-medium);
+            border-radius: 8px;
+            padding: 1.5rem;
+            background-color: var(--google-gray-light); /* Lighter background for content area */
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .excel-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 0.5fr; /* Description, Amount, Quantity, Total */
+            gap: 1rem;
+            align-items: center;
+        }
+        .excel-row input, .excel-row span {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--google-gray-medium);
+            border-radius: 4px;
+            background-color: var(--google-surface-light);
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+        .excel-row span {
+            background-color: #e8f0fe; /* Light blue for calculated fields */
+            font-weight: 500;
+            color: var(--google-blue-dark);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .bill-details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+        .bill-details-table th, .bill-details-table td {
+            border: 1px solid var(--google-gray-medium);
+            padding: 0.75rem;
+            text-align: left;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+        .bill-details-table th {
+            background-color: var(--google-gray-light);
+            font-weight: 600;
+            color: var(--google-text-dark);
+        }
+        .bill-details-table tr:nth-child(even) {
+            background-color: #f5f5f5; /* Slightly darker row for zebra striping */
+        }
+        .bill-details-table td button {
+            margin-right: 0.5rem;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.875rem;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+        }
+        .modal-content {
+            background-color: var(--google-surface-light);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .modal-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--google-text-dark);
+            transition: color 0.3s ease;
+        }
+        .modal-content p {
+            margin-bottom: 1.5rem;
+            color: var(--google-gray-dark);
+            transition: color 0.3s ease;
+        }
+        .modal-buttons button {
+            margin: 0 0.5rem;
+        }
+        .whatsapp-preview-image {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid var(--google-gray-medium);
+            border-radius: 4px;
+            margin-top: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        /* Dark mode styles (Google-like dark theme) */
+        body.dark-mode {
+            background-color: var(--google-background-dark);
+            color: var(--google-text-light);
+        }
+        body.dark-mode .container {
+            background-color: var(--google-surface-dark);
+            box-shadow: 0 4px 8px var(--google-shadow-color-dark);
+        }
+        body.dark-mode .form-container h2,
+        body.dark-mode .form-container h3,
+        body.dark-mode .header .logo,
+        body.dark-mode .main h2,
+        body.dark-mode .main h3,
+        body.dark-mode .modal-content h3 {
+            color: var(--google-text-light);
+        }
+        body.dark-mode .form-container p,
+        body.dark-mode .main p,
+        body.dark-mode .modal-content p {
+            color: #bdc1c6; /* Lighter gray text for dark mode */
+        }
+        body.dark-mode input[type="text"],
+        body.dark-mode input[type="email"],
+        body.dark-mode input[type="password"],
+        body.dark-mode input[type="number"] {
+            background-color: #3c4043; /* Darker input background */
+            border-color: #5f6368;
+            color: var(--google-text-light);
+        }
+        body.dark-mode input[type="text"]::placeholder,
+        body.dark-mode input[type="email"]::placeholder,
+        body.dark-mode input[type="password"]::placeholder,
+        body.dark-mode input[type="number"]::placeholder {
+            color: #9aa0a6; /* Lighter placeholder text */
+        }
+        body.dark-mode .header {
+            border-color: #5f6368;
+        }
+        body.dark-mode .header .menu-options button {
+            color: #bdc1c6;
+        }
+        body.dark-mode .header .menu-options button:hover {
+            color: var(--google-blue);
+        }
+        body.dark-mode .excel-container {
+            background-color: #3c4043;
+            border-color: #5f6368;
+        }
+        body.dark-mode .excel-row input,
+        body.dark-mode .excel-row span {
+            background-color: #5f6368;
+            border-color: #5f6368;
+            color: var(--google-text-light);
+        }
+        body.dark-mode .excel-row span {
+            background-color: #5282e0; /* Darker blue for calculated fields */
+            color: #ffffff;
+        }
+        body.dark-mode .bill-details-table th,
+        body.dark-mode .bill-details-table td {
+            border-color: #5f6368;
+            color: var(--google-text-light);
+        }
+        body.dark-mode .bill-details-table th {
+            background-color: #3c4043;
+            color: var(--google-text-light);
+        }
+        body.dark-mode .bill-details-table tr:nth-child(even) {
+            background-color: #2c2c2c; /* Even rows darker in dark mode */
+        }
+        body.dark-mode .message-box {
+            background-color: #5f6368;
+            color: var(--google-text-light);
+        }
+        body.dark-mode .error-message {
+            background-color: #a50e0e; /* Darker red */
+            color: #fce8e6;
+        }
+        body.dark-mode .success-message {
+            background-color: #188038; /* Darker green */
+            color: #e6f4ea;
+        }
+        body.dark-mode .modal-content {
+            background-color: var(--google-surface-dark);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        body.dark-mode .whatsapp-preview-image {
+            border-color: #5f6368;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Message Box -->
+        <div id="messageBox" class="message-box hidden"></div>
+
+        <!-- Login/Signup Section -->
+        <div id="authSection" class="auth-section">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Welcome to Billing App</h2>
+
+            <!-- Login Form -->
+            <div id="loginForm" class="form-container">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4 text-center">Login</h3>
+                <input type="email" id="loginEmail" placeholder="Email" class="mb-2" required>
+                <input type="password" id="loginPassword" placeholder="Password" class="mb-4" required>
+                <button id="loginBtn" class="btn-primary">Login</button>
+                <p class="text-center text-gray-600 mt-4">Don't have an account? <a href="#" id="showSignup" class="text-blue-600 hover:underline">Sign Up</a></p>
+            </div>
+
+            <!-- Signup Form (hidden by default) -->
+            <div id="signupForm" class="form-container hidden">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4 text-center">Sign Up</h3>
+                <input type="text" id="signupUsername" placeholder="Username" class="mb-2" required>
+                <input type="email" id="signupEmail" placeholder="Email" class="mb-2" required>
+                <input type="password" id="signupPassword" placeholder="Password" class="mb-2" required>
+                <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" class="mb-4" required>
+                <button id="signupBtn" class="btn-success">Sign Up</button>
+                <p class="text-center text-gray-600 mt-4">Already have an account? <a href="#" id="showLogin" class="text-blue-600 hover:underline">Login</a></p>
+            </div>
+        </div>
+
+        <!-- Billing Page (hidden by default) -->
+        <div id="billingPage" class="hidden">
+            <!-- Header -->
+            <header class="header">
+                <div class="logo">
+                    <img src="vm.png" style="width: 50px; height: 50px;" alt="Logo">
+                    <span>MNJ Tech</span>
+                </div>
+                <nav class="menu-options flex items-center">
+                    <button id="showHistoryBtn" class="hover:underline">History</button>
+                    <button id="logoutBtn" class="hover:underline">Logout</button>
+                    <button id="deleteAccountBtn" class="text-red-500 hover:underline">Delete Account</button>
+                    <button id="darkModeToggle" class="ml-4 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-moon text-gray-600 dark:text-yellow-400"></i>
+                    </button>
+                </nav>
+            </header>
+
+            <!-- Main Billing Content -->
+            <main class="mt-8">
+                <h1 class="file-invoice-dollar" style="font-size:250%; font-style: italic; font-weight: bold;">Chaapa House</h1>
+                <br>
+                <div class="excel-container" id="billEntrySection">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label for="holderName" class="block text-sm font-medium text-gray-700 mb-1">Holder Name</label>
+                            <input type="text" id="holderName" placeholder="Enter holder name" required>
+                        </div>
+                        <div>
+                            <label for="billNumber" class="block text-sm font-medium text-gray-700 mb-1">Unique Bill Number</label>
+                            <input type="text" id="billNumber" placeholder="Auto-generated or enter" required>
+                        </div>
+                        <div>
+                            <label for="whatsappNumber" class="block text-sm font-medium text-gray-700 mb-1">Holder WhatsApp Number</label>
+                            <input type="text" id="whatsappNumber" placeholder="e.g., +919876543210" required>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">Bill Items</h3>
+                    <div id="billItemsContainer" class="flex flex-col gap-3">
+                        <!-- Bill items will be added here dynamically -->
+                        <div class="excel-row">
+                            <input type="text" class="item-description" placeholder="Amount in text like (e.g., Item Name)">
+                            <input type="number" class="item-amount" placeholder="Numbers input (Amount)">
+                            <input type="number" class="item-quantity" placeholder="Numbers input (Quantity)">
+                            <span class="item-line-total text-gray-700 font-medium">0.00</span>
+                            <button class="remove-item-btn btn-danger text-sm p-1 rounded-full"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <button id="addItemBtn" class="btn-secondary w-fit self-end mt-2"><i class="fas fa-plus"></i> Add Item</button>
+
+                    <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
+                        <div style="font-weight: bold; font-size: larger;">Total: <span id="billTotal">0.00</span></div>
+                        <div class="flex gap-2">
+                             <button id="saveBillBtn" class="btn-primary"><i class="fas fa-save"></i> Save Bill</button>
+                             <button id="sendBillScreenshotBtn" class="btn-success"><i class="fab fa-whatsapp"></i> Send Bill (WhatsApp)</button>
+                             <button id="downloadExcelBtn" class="btn-secondary"><i class="fas fa-download"></i> Download Excel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-sm text-gray-500 mt-6 text-center">Submitted by: <span id="submittedByUsername" class="font-medium text-yellow-700"></span></p>
+
+                <!-- Bill History Section (hidden by default) -->
+                <div id="billHistorySection" class="hidden mt-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Bill History</h2>
+                    <table class="bill-details-table">
+                        <thead>
+                            <tr>
+                                <th>Bill ID</th>
+                                <th>Holder Name</th>
+                                <th>WhatsApp No.</th>
+                                <th>Total Amount</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="billHistoryTableBody">
+                            <!-- Bill history will be loaded here -->
+                        </tbody>
+                    </table>
+                    <button id="backToNewBillBtn" class="btn-secondary mt-6"><i class="fas fa-arrow-left"></i> Back to New Bill</button>
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="text-center text-gray-500 text-sm mt-8 pt-4 border-t border-gray-200">
+                &copy; 2025 Billing App. All rights reserved.
+            </footer>
+        </div>
+    </div>
+
+    <!-- Custom Modal for Messages/Confirmations -->
+    <div id="customModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="modalTitle"></h3>
+            <p id="modalMessage"></p>
+            <div id="modalButtons" class="modal-buttons">
+                <!-- Buttons will be dynamically added -->
+            </div>
+            <img id="whatsappPreviewImage" class="whatsapp-preview-image hidden" alt="Bill Screenshot Preview">
+        </div>
+    </div>
+
+    <!-- html2canvas for screenshot functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- SheetJS (xlsx) for Excel export -->
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+
+    <script>
+        // Utility function for showing messages
+        function showMessage(message, type = 'info') {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.className = 'message-box'; // Reset classes
+            if (type === 'error') {
+                messageBox.classList.add('error-message');
+            } else if (type === 'success') {
+                messageBox.classList.add('success-message');
+            } else {
+                messageBox.classList.add('bg-blue-100', 'text-blue-800'); // Default info style
+            }
+            messageBox.classList.remove('hidden');
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Custom Modal Function
+        function showCustomModal(title, message, buttons, imageSrc = null) {
+            const modal = document.getElementById('customModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const modalButtons = document.getElementById('modalButtons');
+            const whatsappPreviewImage = document.getElementById('whatsappPreviewImage');
+
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalButtons.innerHTML = ''; // Clear previous buttons
+
+            if (imageSrc) {
+                whatsappPreviewImage.src = imageSrc;
+                whatsappPreviewImage.classList.remove('hidden');
+            } else {
+                whatsappPreviewImage.classList.add('hidden');
+            }
+
+            buttons.forEach(btn => {
+                const buttonElement = document.createElement('button');
+                buttonElement.textContent = btn.text;
+                buttonElement.className = `button ${btn.className || 'btn-primary'}`;
+                buttonElement.onclick = () => {
+                    hideCustomModal();
+                    if (btn.handler) btn.handler();
+                };
+                modalButtons.appendChild(buttonElement);
+            });
+
+            modal.classList.remove('hidden');
+        }
+
+        function hideCustomModal() {
+            document.getElementById('customModal').classList.add('hidden');
+        }
+
+        // --- Dark Mode Logic ---
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const darkModeIcon = darkModeToggle.querySelector('i');
+
+        function enableDarkMode() {
+            document.body.classList.add('dark-mode');
+            darkModeIcon.classList.remove('fa-moon');
+            darkModeIcon.classList.add('fa-sun');
+            localStorage.setItem('theme', 'dark');
+            // Update colors for dynamic elements if necessary
+            document.querySelectorAll('.excel-row span').forEach(span => {
+                span.style.backgroundColor = 'var(--google-blue-dark)';
+                span.style.color = '#ffffff';
+            });
+            document.querySelectorAll('.btn-secondary').forEach(btn => {
+                btn.style.backgroundColor = '#5f6368'; // Darker gray for secondary in dark mode
+                btn.style.color = 'var(--google-text-light)';
+            });
+            document.querySelectorAll('.bill-details-table th').forEach(th => {
+                th.style.backgroundColor = '#3c4043';
+                th.style.color = 'var(--google-text-light)';
+            });
+            document.querySelectorAll('.bill-details-table tr:nth-child(even)').forEach(tr => {
+                tr.style.backgroundColor = '#2c2c2c';
+            });
+        }
+
+        function disableDarkMode() {
+            document.body.classList.remove('dark-mode');
+            darkModeIcon.classList.remove('fa-sun');
+            darkModeIcon.classList.add('fa-moon');
+            localStorage.setItem('theme', 'light');
+            // Revert colors for dynamic elements
+            document.querySelectorAll('.excel-row span').forEach(span => {
+                span.style.backgroundColor = '#e8f0fe';
+                span.style.color = 'var(--google-blue-dark)';
+            });
+            document.querySelectorAll('.btn-secondary').forEach(btn => {
+                btn.style.backgroundColor = 'var(--google-gray-medium)';
+                btn.style.color = 'var(--google-text-dark)';
+            });
+            document.querySelectorAll('.bill-details-table th').forEach(th => {
+                th.style.backgroundColor = 'var(--google-gray-light)';
+                th.style.color = 'var(--google-text-dark)';
+            });
+            document.querySelectorAll('.bill-details-table tr:nth-child(even)').forEach(tr => {
+                tr.style.backgroundColor = '#f5f5f5';
+            });
+        }
+
+        // Toggle dark mode on button click
+        darkModeToggle.addEventListener('click', () => {
+            if (document.body.classList.contains('dark-mode')) {
+                disableDarkMode();
+            } else {
+                enableDarkMode();
+            }
+        });
+
+        // Apply theme on page load
+        function applyTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                enableDarkMode();
+            } else {
+                disableDarkMode(); // Default to light mode if no preference or 'light'
+            }
+        }
+
+        // --- Authentication Logic ---
+        const authSection = document.getElementById('authSection');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const showLoginLink = document.getElementById('showLogin');
+        const showSignupLink = document.getElementById('showSignup');
+
+        const loginEmailInput = document.getElementById('loginEmail');
+        const loginPasswordInput = document.getElementById('loginPassword');
+        const signupUsernameInput = document.getElementById('signupUsername');
+        const signupEmailInput = document.getElementById('signupEmail');
+        const signupPasswordInput = document.getElementById('signupPassword');
+        const signupConfirmPasswordInput = document.getElementById('signupConfirmPassword');
+
+        let currentUser = null; // Stores the currently logged-in user object
+
+        // Load users from localStorage
+        function getUsers() {
+            const users = localStorage.getItem('users');
+            return users ? JSON.parse(users) : [];
+        }
+
+        // Save users to localStorage
+        function saveUsers(users) {
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // Register new user
+        signupBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const username = signupUsernameInput.value.trim();
+            const email = signupEmailInput.value.trim();
+            const password = signupPasswordInput.value.trim(); // FIX: Added .value
+            const confirmPassword = signupConfirmPasswordInput.value.trim();
+
+            if (!username || !email || !password || !confirmPassword) {
+                showMessage('All fields are required!', 'error');
+                return;
+            }
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match!', 'error');
+                return;
+            }
+            if (password.length < 6) {
+                showMessage('Password must be at least 6 characters long!', 'error');
+                return;
+            }
+            if (!/\S+@\S+\.\S+/.test(email)) {
+                showMessage('Please enter a valid email address!', 'error');
+                return;
+            }
+
+            const users = getUsers();
+            if (users.some(user => user.email === email)) {
+                showMessage('User with this email already exists!', 'error');
+                return;
+            }
+
+            // In a real app, you'd hash the password securely
+            users.push({ username, email, password }); // Storing plain password for simplicity as per request for localStorage
+            saveUsers(users);
+            showMessage('Account created successfully! Please login.', 'success');
+            loginForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+            signupUsernameInput.value = '';
+            signupEmailInput.value = '';
+            signupPasswordInput.value = '';
+            signupConfirmPasswordInput.value = '';
+        });
+
+        // Login user
+        loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = loginEmailInput.value.trim();
+            const password = loginPasswordInput.value.trim();
+
+            if (!email || !password) {
+                showMessage('Email and password are required!', 'error');
+                return;
+            }
+
+            const users = getUsers();
+            const user = users.find(u => u.email === email && u.password === password); // Simple check
+
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showMessage(`Welcome, ${currentUser.username}!`, 'success');
+                renderBillingPage();
+            } else {
+                showMessage('Invalid email or password!', 'error');
+            }
+        });
+
+        // Show signup form
+        showSignupLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.classList.add('hidden');
+            signupForm.classList.remove('hidden');
+            showMessage(''); // Clear messages
+        });
+
+        // Show login form
+        showLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            showMessage(''); // Clear messages
+        });
+
+        // Check if user is already logged in on page load
+        function checkLoginStatus() {
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+                renderBillingPage();
+            } else {
+                authSection.classList.remove('hidden');
+                billingPage.classList.add('hidden');
+            }
+        }
+
+        // --- Billing Page Logic ---
+        const billingPage = document.getElementById('billingPage');
+        const submittedByUsername = document.getElementById('submittedByUsername');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+        const showHistoryBtn = document.getElementById('showHistoryBtn');
+        const backToNewBillBtn = document.getElementById('backToNewBillBtn');
+        const billEntrySection = document.getElementById('billEntrySection');
+        const billHistorySection = document.getElementById('billHistorySection');
+
+        const holderNameInput = document.getElementById('holderName');
+        const billNumberInput = document.getElementById('billNumber');
+        const whatsappNumberInput = document.getElementById('whatsappNumber');
+        const billItemsContainer = document.getElementById('billItemsContainer');
+        const addItemBtn = document.getElementById('addItemBtn');
+        const saveBillBtn = document.getElementById('saveBillBtn');
+        const sendBillScreenshotBtn = document.getElementById('sendBillScreenshotBtn');
+        const downloadExcelBtn = document.getElementById('downloadExcelBtn');
+        const billTotalSpan = document.getElementById('billTotal');
+        const billHistoryTableBody = document.getElementById('billHistoryTableBody');
+
+        // Render billing page after successful login
+        function renderBillingPage() {
+            authSection.classList.add('hidden');
+            billingPage.classList.remove('hidden');
+            submittedByUsername.textContent = currentUser.username;
+            resetBillForm(); // Reset form when page loads
+            loadBillHistory(); // Load history when page is rendered
+        }
+
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            showCustomModal(
+                'Confirm Logout',
+                'Are you sure you want to log out?',
+                [
+                    { text: 'Cancel', className: 'btn-secondary' },
+                    { text: 'Logout', className: 'btn-danger', handler: () => {
+                        localStorage.removeItem('currentUser');
+                        currentUser = null;
+                        showMessage('Logged out successfully!', 'success');
+                        authSection.classList.remove('hidden');
+                        billingPage.classList.add('hidden');
+                        loginEmailInput.value = '';
+                        loginPasswordInput.value = '';
+                    }}
+                ]
+            );
+        });
+
+        // Delete Account
+        deleteAccountBtn.addEventListener('click', () => {
+            showCustomModal(
+                'Confirm Account Deletion',
+                'This action is irreversible. Are you sure you want to delete your account?',
+                [
+                    { text: 'Cancel', className: 'btn-secondary' },
+                    { text: 'Delete Account', className: 'btn-danger', handler: () => {
+                        let users = getUsers();
+                        users = users.filter(user => user.email !== currentUser.email);
+                        saveUsers(users);
+                        localStorage.removeItem('currentUser');
+                        // Also delete user-specific bills
+                        localStorage.removeItem(`bills_${currentUser.email}`);
+                        currentUser = null;
+                        showMessage('Account deleted successfully!', 'success');
+                        authSection.classList.remove('hidden');
+                        billingPage.classList.add('hidden');
+                        loginEmailInput.value = '';
+                        loginPasswordInput.value = '';
+                    }}
+                ]
+            );
+        });
+
+        // Show Bill History
+        showHistoryBtn.addEventListener('click', () => {
+            billEntrySection.classList.add('hidden');
+            billHistorySection.classList.remove('hidden');
+            loadBillHistory();
+        });
+
+        // Back to New Bill
+        backToNewBillBtn.addEventListener('click', () => {
+            billHistorySection.classList.add('hidden');
+            billEntrySection.classList.remove('hidden');
+            resetBillForm();
+        });
+
+        // --- Bill Item Management ---
+        function createBillItemRow(description = '', amount = '', quantity = '') {
+            const row = document.createElement('div');
+            row.className = 'excel-row';
+            row.innerHTML = `
+                <input type="text" class="item-description" placeholder="Amount in text like (e.g., Item Name)" value="${description}">
+                <input type="number" class="item-amount" placeholder="Numbers input (Amount)" value="${amount}" min="0" step="0.01">
+                <input type="number" class="item-quantity" placeholder="Numbers input (Quantity)" value="${quantity}" min="1" step="1">
+                <span class="item-line-total text-gray-700 font-medium">0.00</span>
+                <button class="remove-item-btn btn-danger text-sm p-1 rounded-full"><i class="fas fa-times"></i></button>
+            `;
+
+            const amountInput = row.querySelector('.item-amount');
+            const quantityInput = row.querySelector('.item-quantity');
+            const lineTotalSpan = row.querySelector('.item-line-total');
+            const removeBtn = row.querySelector('.remove-item-btn');
+
+            const updateLineTotal = () => {
+                const amt = parseFloat(amountInput.value) || 0;
+                const qty = parseInt(quantityInput.value) || 0;
+                lineTotalSpan.textContent = (amt * qty).toFixed(2);
+                calculateOverallTotal();
+            };
+
+            amountInput.addEventListener('input', updateLineTotal);
+            quantityInput.addEventListener('input', updateLineTotal);
+            removeBtn.addEventListener('click', () => {
+                row.remove();
+                calculateOverallTotal();
+            });
+
+            return row;
+        }
+
+        // Add initial row
+        billItemsContainer.appendChild(createBillItemRow());
+
+        // Add new item row
+        addItemBtn.addEventListener('click', () => {
+            billItemsContainer.appendChild(createBillItemRow());
+        });
+
+        // Calculate overall bill total
+        function calculateOverallTotal() {
+            let total = 0;
+            document.querySelectorAll('.item-line-total').forEach(span => {
+                total += parseFloat(span.textContent);
+            });
+            billTotalSpan.textContent = total.toFixed(2);
+        }
+
+        // Generate a unique bill number
+        function generateUniqueBillNumber() {
+            const timestamp = Date.now().toString(36);
+            const randomString = Math.random().toString(36).substring(2, 7);
+            return `BILL-${timestamp.toUpperCase()}-${randomString.toUpperCase()}`;
+        }
+
+        // Reset the bill form
+        function resetBillForm() {
+            holderNameInput.value = '';
+            billNumberInput.value = generateUniqueBillNumber(); // Auto-generate new bill number
+            whatsappNumberInput.value = '';
+            billItemsContainer.innerHTML = ''; // Clear all items
+            billItemsContainer.appendChild(createBillItemRow()); // Add one fresh row
+            calculateOverallTotal();
+        }
+
+        // --- Save Bill ---
+        saveBillBtn.addEventListener('click', () => {
+            const holderName = holderNameInput.value.trim();
+            const billNumber = billNumberInput.value.trim();
+            const whatsappNumber = whatsappNumberInput.value.trim();
+            const items = [];
+            let isValid = true;
+
+            document.querySelectorAll('.excel-row').forEach(row => {
+                const description = row.querySelector('.item-description').value.trim();
+                const amount = parseFloat(row.querySelector('.item-amount').value);
+                const quantity = parseInt(row.querySelector('.item-quantity').value);
+                const lineTotal = parseFloat(row.querySelector('.item-line-total').textContent);
+
+                if (!description || isNaN(amount) || isNaN(quantity) || amount <= 0 || quantity <= 0) {
+                    isValid = false;
+                    return;
+                }
+                items.push({ description, amount, quantity, lineTotal });
+            });
+
+            if (!holderName || !billNumber || !whatsappNumber) {
+                showMessage('Holder Name, Bill Number, and WhatsApp Number are required!', 'error');
+                return;
+            }
+            if (!isValid) {
+                showMessage('Please ensure all bill items have a description, valid amount, and quantity (greater than zero).', 'error');
+                return;
+            }
+            if (items.length === 0) {
+                showMessage('Please add at least one bill item.', 'error');
+                return;
+            }
+
+            const billTotal = parseFloat(billTotalSpan.textContent);
+
+            const newBill = {
+                billId: billNumber,
+                holderName,
+                whatsappNumber,
+                items,
+                totalAmount: billTotal,
+                submittedBy: currentUser.username,
+                date: new Date().toLocaleString()
+            };
+
+            let bills = getBillsForCurrentUser();
+            // Check if billId already exists (for potential edits, though UI doesn't support direct edit yet)
+            const existingBillIndex = bills.findIndex(b => b.billId === newBill.billId);
+            if (existingBillIndex > -1) {
+                bills[existingBillIndex] = newBill; // Update existing bill
+                showMessage('Bill updated successfully!', 'success');
+            } else {
+                bills.push(newBill); // Add new bill
+                showMessage('Bill saved successfully!', 'success');
+            }
+            saveBillsForCurrentUser(bills);
+            resetBillForm(); // Clear form after saving
+            loadBillHistory(); // Refresh history
+        });
+
+        // Get bills for current user from localStorage
+        function getBillsForCurrentUser() {
+            if (!currentUser) return [];
+            const userBills = localStorage.getItem(`bills_${currentUser.email}`);
+            return userBills ? JSON.parse(userBills) : [];
+        }
+
+        // Save bills for current user to localStorage
+        function saveBillsForCurrentUser(bills) {
+            if (currentUser) {
+                localStorage.setItem(`bills_${currentUser.email}`, JSON.stringify(bills));
+            }
+        }
+
+        // Load and display bill history
+        function loadBillHistory() {
+            const bills = getBillsForCurrentUser();
+            billHistoryTableBody.innerHTML = ''; // Clear existing rows
+
+            if (bills.length === 0) {
+                billHistoryTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-gray-500">No bills recorded yet.</td></tr>';
+                return;
+            }
+
+            bills.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
+
+            bills.forEach(bill => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${bill.billId}</td>
+                    <td>${bill.holderName}</td>
+                    <td>${bill.whatsappNumber}</td>
+                    <td>$${bill.totalAmount.toFixed(2)}</td>
+                    <td>${bill.date}</td>
+                    <td>
+                        <button class="view-bill-btn btn-primary text-sm" data-bill-id="${bill.billId}"><i class="fas fa-eye"></i> View</button>
+                        <button class="delete-bill-btn btn-danger text-sm" data-bill-id="${bill.billId}"><i class="fas fa-trash"></i> Delete</button>
+                    </td>
+                `;
+                billHistoryTableBody.appendChild(row);
+            });
+
+            // Add event listeners for view and delete buttons
+            document.querySelectorAll('.view-bill-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const billId = e.target.dataset.billId;
+                    viewBillDetails(billId);
+                });
+            });
+
+            document.querySelectorAll('.delete-bill-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const billId = e.target.dataset.billId;
+                    showCustomModal(
+                        'Confirm Deletion',
+                        `Are you sure you want to delete bill ${billId}?`,
+                        [
+                            { text: 'Cancel', className: 'btn-secondary' },
+                            { text: 'Delete', className: 'btn-danger', handler: () => deleteBill(billId) }
+                        ]
+                    );
+                });
+            });
+        }
+
+        // View Bill Details in a modal
+        function viewBillDetails(billId) {
+            const bills = getBillsForCurrentUser();
+            const bill = bills.find(b => b.billId === billId);
+
+            if (!bill) {
+                showMessage('Bill not found!', 'error');
+                return;
+            }
+
+            let itemsHtml = bill.items.map(item => `
+                <li>${item.description}: $${item.amount.toFixed(2)} x ${item.quantity} = $${item.lineTotal.toFixed(2)}</li>
+            `).join('');
+
+            const message = `
+                <p><strong>Holder Name:</strong> ${bill.holderName}</p>
+                <p><strong>Bill Number:</strong> ${bill.billId}</p>
+                <p><strong>WhatsApp:</strong> ${bill.whatsappNumber}</p>
+                <p><strong>Date:</strong> ${bill.date}</p>
+                <p><strong>Items:</strong></p>
+                <ul>${itemsHtml}</ul>
+                <p><strong>Total Amount:</strong> $${bill.totalAmount.toFixed(2)}</p>
+                <p><strong>Submitted By:</strong> ${bill.submittedBy}</p>
+            `;
+
+            showCustomModal(
+                `Bill Details: ${bill.billId}`,
+                message,
+                [{ text: 'Close', className: 'btn-primary' }]
+            );
+        }
+
+        // Delete a bill
+        function deleteBill(billId) {
+            let bills = getBillsForCurrentUser();
+            bills = bills.filter(bill => bill.billId !== billId);
+            saveBillsForCurrentUser(bills);
+            showMessage(`Bill ${billId} deleted successfully!`, 'success');
+            loadBillHistory(); // Refresh history
+        }
+
+        // --- WhatsApp Integration (Text Message and Screenshot) ---
+        sendBillScreenshotBtn.addEventListener('click', async () => {
+            const holderName = holderNameInput.value.trim();
+            const billNumber = billNumberInput.value.trim();
+            const whatsappNumber = whatsappNumberInput.value.trim();
+            const items = [];
+            let isValid = true;
+
+            document.querySelectorAll('.excel-row').forEach(row => {
+                const description = row.querySelector('.item-description').value.trim();
+                const amount = parseFloat(row.querySelector('.item-amount').value);
+                const quantity = parseInt(row.querySelector('.item-quantity').value);
+                const lineTotal = parseFloat(row.querySelector('.item-line-total').textContent);
+
+                if (!description || isNaN(amount) || isNaN(quantity) || amount <= 0 || quantity <= 0) {
+                    isValid = false;
+                    return;
+                }
+                items.push({ description, amount, quantity, lineTotal });
+            });
+
+            if (!holderName || !billNumber || !whatsappNumber) {
+                showMessage('Holder Name, Bill Number, and WhatsApp Number are required to send bill!', 'error');
+                return;
+            }
+            if (!isValid || items.length === 0) {
+                showMessage('Please ensure all bill items are valid before sending.', 'error');
+                return;
+            }
+
+            const billTotal = parseFloat(billTotalSpan.textContent);
+
+            let billText = `*Bill Details from Billing App*\n\n`;
+            billText += `*Holder Name:* ${holderName}\n`;
+            billText += `*Bill Number:* ${billNumber}\n`;
+            billText += `*Date:* ${new Date().toLocaleDateString()}\n\n`;
+            billText += `*Items:*\n`;
+            items.forEach(item => {
+                billText += `- ${item.description}: $${item.amount.toFixed(2)} x ${item.quantity} = $${item.lineTotal.toFixed(2)}\n`;
+            });
+            billText += `\n*Total Amount:* $${billTotal.toFixed(2)}\n`;
+            billText += `_Submitted by: ${currentUser.username}_`;
+
+            const billSectionToCapture = document.getElementById('billEntrySection');
+            let imageDataUrl = null;
+
+            try {
+                const canvas = await html2canvas(billSectionToCapture, {
+                    scale: 2, // Increase scale for better quality
+                    useCORS: true,
+                    logging: false
+                });
+                imageDataUrl = canvas.toDataURL('image/png');
+            } catch (error) {
+                console.error("Error generating screenshot:", error);
+                showMessage("Could not generate bill screenshot. You can still share the text.", "error");
+            }
+
+            showCustomModal(
+                'Share Bill Details',
+                'Choose how you want to share the bill. You can also download the screenshot below to share manually.',
+                [
+                    {
+                        text: 'Open WhatsApp (to Holder)',
+                        className: 'btn-success',
+                        handler: () => {
+                            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(billText)}`;
+                            window.open(whatsappUrl, '_blank');
+                        }
+                    },
+                    {
+                        text: 'Copy Text & Open WhatsApp Web',
+                        className: 'btn-secondary',
+                        handler: () => {
+                            const tempTextArea = document.createElement('textarea');
+                            tempTextArea.value = billText;
+                            document.body.appendChild(tempTextArea);
+                            tempTextArea.select();
+                            try {
+                                document.execCommand('copy');
+                                showMessage('Bill text copied to clipboard!', 'success');
+                                window.open('https://web.whatsapp.com/', '_blank');
+                            } catch (err) {
+                                console.error('Failed to copy text: ', err);
+                                showMessage('Failed to copy text. Please copy manually.', 'error');
+                            } finally {
+                                document.body.removeChild(tempTextArea);
+                            }
+                        }
+                    },
+                    {
+                        text: 'Download Screenshot',
+                        className: 'btn-secondary',
+                        handler: () => {
+                            if (imageDataUrl) {
+                                const a = document.createElement('a');
+                                a.href = imageDataUrl;
+                                a.download = `bill_${billNumber}.png`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                showMessage('Screenshot downloaded!', 'success');
+                            } else {
+                                showMessage('No screenshot available to download.', 'error');
+                            }
+                        }
+                    },
+                    {
+                        text: 'Close',
+                        className: 'btn-danger'
+                    }
+                ],
+                imageDataUrl // Pass the image data URL to the modal
+            );
+        });
+
+
+        // --- Download Excel ---
+        downloadExcelBtn.addEventListener('click', () => {
+            const bills = getBillsForCurrentUser();
+            if (bills.length === 0) {
+                showMessage('No bills to download!', 'info');
+                return;
+            }
+
+            const data = [];
+            // Add header row
+            data.push([
+                'Bill ID', 'Holder Name', 'WhatsApp Number', 'Total Amount', 'Date',
+                'Item Description', 'Item Amount', 'Item Quantity', 'Item Line Total'
+            ]);
+
+            bills.forEach(bill => {
+                if (bill.items && bill.items.length > 0) {
+                    bill.items.forEach((item, index) => {
+                        const row = [];
+                        if (index === 0) { // Only add bill details on the first item row
+                            row.push(bill.billId, bill.holderName, bill.whatsappNumber, bill.totalAmount.toFixed(2), bill.date);
+                        } else { // Empty cells for subsequent item rows for the same bill
+                            row.push('', '', '', '', '');
+                        }
+                        row.push(item.description, item.amount.toFixed(2), item.quantity, item.lineTotal.toFixed(2));
+                        data.push(row);
+                    });
+                } else {
+                    // Handle bills with no items (should ideally not happen if validation is strict)
+                    data.push([bill.billId, bill.holderName, bill.whatsappNumber, bill.totalAmount.toFixed(2), bill.date, 'No Items', '', '', '']);
+                }
+            });
+
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Billing Data");
+
+            const filename = `Billing_Data_${new Date().toISOString().slice(0,10)}.xlsx`;
+            XLSX.writeFile(wb, filename);
+            showMessage('Excel file downloaded successfully!', 'success');
+        });
+
+        // Initial check on page load
+        applyTheme(); // Apply theme before checking login status
+        checkLoginStatus();
+    </script>
+</body>
+</html>
